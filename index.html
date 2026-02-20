@@ -92,6 +92,7 @@
         .btn-acquire:hover { color: #000; background: var(--accent); box-shadow: 0 0 15px var(--accent); }
 
         .btn-cert {
+            display: none;
             background: transparent; color: var(--accent); border: none;
             font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px;
             text-decoration: underline; cursor: pointer; opacity: 0.4; transition: 0.3s;
@@ -189,7 +190,7 @@
         <div class="services-grid">
             <div class="service-box">
                 <h4>Envíos de Arte</h4>
-                <p>Embalaje de seguridad para obras artesanales. Envíos nacionales certificados.</p>
+                <p>Embalaje de seguridad para obras originales. Envíos nacionales certificados.</p>
             </div>
             <div class="service-box">
                 <h4>Pagos Flexibles</h4>
@@ -222,29 +223,54 @@
     <a href="#" class="wsp-float" onclick="enviarWsp('General')">WhatsApp / Inquiry</a>
 
     <script>
-        function enviarWsp(obra) {
-            const numero = "543816726136"; 
-            const mensaje = encodeURIComponent(`Saludos. Me gustaría recibir información detallada sobre la obra "${obra}" de The Patrick Heir.`);
-            window.open(`https://wa.me/${numero}?text=${mensaje}`, '_blank');
-        }
+    // 1. Función para enviar a WhatsApp
+    function enviarWsp(obra) {
+        const numero = "543816726136"; 
+        const mensaje = encodeURIComponent(`Saludos. Me gustaría recibir información detallada sobre la obra "${obra}" de The Patrick Heir.`);
+        window.open(`https://wa.me/${numero}?text=${mensaje}`, '_blank');
+    }
 
-        function generarCertificado(titulo, tecnica, medidas) {
+    // 2. Lógica del Certificado con Clave
+    function generarCertificado(titulo, tecnica, medidas) {
+        const claveSecreta = "45274196Angel"; // Cambiala cuando quieras
+        const intento = prompt("Control de Galería: Ingrese clave para imprimir:");
+
+        if (intento === claveSecreta) {
             document.getElementById('c-titulo').innerText = titulo;
             document.getElementById('c-tecnica').innerText = tecnica;
             document.getElementById('c-medidas').innerText = medidas;
             document.getElementById('c-fecha').innerText = new Date().toLocaleDateString();
             window.print();
+        } else {
+            alert("Clave incorrecta.");
         }
+    }
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('visible');
+    // 3. LA LLAVE SECRETA (Ctrl + Shift + Y)
+    window.addEventListener('keydown', function(e) {
+        // Detecta si presionás Control, Shift y la letra Y al mismo tiempo
+        if (e.ctrlKey && e.shiftKey && e.key === 'Y') {
+            const botones = document.querySelectorAll('.btn-cert');
+            botones.forEach(btn => {
+                // Si están ocultos los muestra, si están visibles los oculta
+                if (btn.style.display === 'none' || btn.style.display === '') {
+                    btn.style.display = 'block';
+                } else {
+                    btn.style.display = 'none';
+                }
             });
-        }, { threshold: 0.1 });
+            console.log("Modo Administrador alternado");
+        }
+    });
 
-        document.querySelectorAll('.artwork').forEach(art => observer.observe(art));
-    </script>
+    // 4. Animación de aparición suave (Scroll)
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+        });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.artwork').forEach(art => observer.observe(art));
+</script>
 </body>
 </html>
-
-
