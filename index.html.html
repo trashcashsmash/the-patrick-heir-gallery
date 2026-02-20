@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Patrick Heir | Luxury Art Gallery</title>
+
+    <link rel="shortcut icon" href="logofavicon.png?v=2" type="image/png">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;1,700&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #121212;
+            --card-bg: #1a1a1a;
+            --text-color: #f5f5f5;
+            --accent: #D4AF37;
+            --accent-soft: rgba(212, 175, 55, 0.2);
+            --transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- ESTILOS BASE --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Montserrat', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* --- NAVEGACIÓN --- */
+        nav {
+            position: fixed;
+            top: 0; width: 100%; padding: 25px 5%;
+            display: flex; justify-content: space-between; align-items: center;
+            z-index: 1000; background: rgba(18, 18, 18, 0.8);
+            backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .logo { 
+            font-family: 'Bodoni Moda', serif; 
+            font-size: 1.5rem; 
+            letter-spacing: 3px; 
+            text-transform: uppercase; 
+            color: var(--accent); 
+        }
+        .nav-info { font-size: 0.65rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; }
+
+        /* --- HEADER --- */
+        header {
+            padding: 180px 20px 80px; text-align: center;
+            background: radial-gradient(circle at top, #2a2a2a 0%, #121212 70%);
+        }
+
+        .line-text { text-transform: uppercase; letter-spacing: 8px; font-size: 0.8rem; font-weight: 200; color: var(--accent); margin-bottom: 25px; display: block; }
+        .line { width: 1px; height: 100px; background: linear-gradient(to bottom, var(--accent), transparent); margin: 0 auto 40px; }
+
+        h1 { font-family: 'Bodoni Moda', serif; font-size: clamp(2.5rem, 8vw, 5rem); font-weight: 300; font-style: italic; line-height: 1.1; }
+
+        /* --- GALERÍA --- */
+        .gallery-container {
+            max-width: 1400px; margin: 0 auto; padding: 100px 5%;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 100px 60px;
+        }
+
+        .artwork { opacity: 0; transform: translateY(30px); transition: var(--transition); text-align: center; }
+        .artwork.visible { opacity: 1; transform: translateY(0); }
+
+        .frame-wrapper {
+            position: relative; background-color: #000; padding: 15px;
+            border: 1px solid var(--accent); box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            transition: var(--transition); line-height: 0; display: inline-block;
+        }
+
+        .frame-wrapper img { width: 100%; height: auto; border: 1px solid var(--accent); filter: grayscale(20%); transition: var(--transition); }
+        .artwork:hover .frame-wrapper { transform: scale(1.03) translateY(-15px); border-color: #fff; box-shadow: 0 50px 80px rgba(0,0,0,0.8); }
+        .artwork:hover img { filter: grayscale(0%); }
+
+        .art-info { margin-top: 30px; }
+        .art-info h2 { font-family: 'Bodoni Moda', serif; font-size: 1.8rem; margin-bottom: 15px; }
+
+        .btn-group { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+        .btn-acquire {
+            background: transparent; color: var(--accent); border: 1px solid var(--accent);
+            padding: 15px 40px; font-size: 0.7rem; text-transform: uppercase;
+            letter-spacing: 3px; cursor: pointer; transition: 0.4s;
+        }
+        .btn-acquire:hover { color: #000; background: var(--accent); box-shadow: 0 0 15px var(--accent); }
+
+        .btn-cert {
+            background: transparent; color: var(--accent); border: none;
+            font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1px;
+            text-decoration: underline; cursor: pointer; opacity: 0.4; transition: 0.3s;
+        }
+        .btn-cert:hover { opacity: 1; }
+
+        /* --- SERVICIOS --- */
+        .services { padding: 100px 5%; background: #0a0a0a; border-top: 1px solid rgba(255,255,255,0.05); }
+        .services-grid { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 60px; }
+        .service-box h4 { font-family: 'Bodoni Moda', serif; font-size: 1.4rem; color: var(--accent); margin-bottom: 20px; }
+        .service-box p { font-size: 0.85rem; font-weight: 200; opacity: 0.6; }
+
+        /* --- WSP FLOAT --- */
+        .wsp-float {
+            position: fixed; bottom: 40px; right: 40px; background: #000;
+            border: 1px solid var(--accent); color: var(--accent); padding: 15px 25px;
+            text-decoration: none; font-size: 0.7rem; letter-spacing: 2px; z-index: 100; transition: 0.3s;
+        }
+        .wsp-float:hover { background: var(--accent); color: #000; }
+
+        /* --- IMPRESIÓN CERTIFICADO --- */
+        #certificado-imprimir { display: none; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #certificado-imprimir, #certificado-imprimir * { visibility: visible; }
+            #certificado-imprimir {
+                display: block; position: absolute; left: 0; top: 0; width: 100%;
+                padding: 60px; background: white; color: black; text-align: center;
+                border: 15px double #D4AF37; font-family: 'Bodoni Moda', serif;
+            }
+            .cert-title { font-size: 35pt; margin-bottom: 10px; color: #1a1a1a; }
+            .cert-subtitle { font-family: 'Montserrat', sans-serif; font-size: 12pt; text-transform: uppercase; letter-spacing: 5px; margin-bottom: 50px; color: #D4AF37; }
+            .cert-body { font-family: 'Montserrat', sans-serif; font-size: 15pt; line-height: 2.2; text-align: left; max-width: 80%; margin: 0 auto; }
+            .data-line { font-weight: 600; border-bottom: 1px solid #ddd; display: inline-block; min-width: 250px; padding-left: 10px; }
+            .cert-footer { margin-top: 100px; display: flex; justify-content: space-around; font-family: 'Montserrat', sans-serif; font-size: 10pt; }
+            .signature-space { border-top: 1px solid black; width: 200px; margin-top: 60px; padding-top: 10px; text-align: center; }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 3rem; }
+            .wsp-float { bottom: 20px; right: 20px; padding: 12px 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo">The Patrick Heir</div>
+        <div class="nav-info">Tucumán, Argentina • Est. 2026</div>
+    </nav>
+
+    <header>
+        <span class="line-text">Noble Legacy in Art</span>
+        <div class="line"></div>
+        <h1>Premium Handmade<br>Original Collection</h1>
+    </header>
+
+    <main class="gallery-container">
+        <article class="artwork">
+            <div class="frame-wrapper"><img src="img/Mariposa Abstracta.jpg" alt="Mariposa Abstracta"></div>
+            <div class="art-info">
+                <h2>Mariposa Abstracta</h2>
+                <div class="btn-group">
+                    <button class="btn-acquire" onclick="enviarWsp('Mariposa Abstracta')">Consultar Adquisición</button>
+                    <button class="btn-cert" onclick="generarCertificado('Mariposa Abstracta', 'Acrílico y Técnica Mixta', '50 x 70 cm')">Emitir Certificado</button>
+                </div>
+            </div>
+        </article>
+
+        <article class="artwork">
+            <div class="frame-wrapper"><img src="img/Frutera Antigua.jpg" alt="Frutera Antigua"></div>
+            <div class="art-info">
+                <h2>Frutera Antigua</h2>
+                <div class="btn-group">
+                    <button class="btn-acquire" onclick="enviarWsp('Frutera Antigua')">Consultar Adquisición</button>
+                    <button class="btn-cert" onclick="generarCertificado('Frutera Antigua', 'Óleo sobre Lienzo', '60 x 80 cm')">Emitir Certificado</button>
+                </div>
+            </div>
+        </article>
+
+        <article class="artwork">
+            <div class="frame-wrapper"><img src="img/Cuadro de Flores Moradas.jpg" alt="Esencia Púrpura"></div>
+            <div class="art-info">
+                <h2>Esencia Púrpura</h2>
+                <div class="btn-group">
+                    <button class="btn-acquire" onclick="enviarWsp('Esencia Púrpura')">Consultar Adquisición</button>
+                    <button class="btn-cert" onclick="generarCertificado('Esencia Púrpura', 'Óleo sobre Lienzo', '40 x 50 cm')">Emitir Certificado</button>
+                </div>
+            </div>
+        </article>
+    </main>
+
+    <section class="services">
+        <div class="services-grid">
+            <div class="service-box">
+                <h4>Envíos de Arte</h4>
+                <p>Embalaje de seguridad para obras originales. Envíos nacionales certificados.</p>
+            </div>
+            <div class="service-box">
+                <h4>Pagos Flexibles</h4>
+                <p>Transferencias, Mercado Pago y asesoramiento personalizado.</p>
+            </div>
+            <div class="service-box">
+                <h4>The Patrick Heir Signature</h4>
+                <p>Cada pieza se entrega con documentación de autenticidad sellada.</p>
+            </div>
+        </div>
+    </section>
+
+    <div id="certificado-imprimir">
+        <div class="cert-title">Certificado de Autenticidad</div>
+        <div class="cert-subtitle">The Patrick Heir | Fine Art Studio</div>
+        
+        <div class="cert-body">
+            Por la presente se certifica que la obra titulada <span id="c-titulo" class="data-line"></span> es una pieza única y original, creada por el artista utilizando la técnica de <span id="c-tecnica" class="data-line"></span>. <br><br>
+            Dimensiones: <span id="c-medidas" class="data-line"></span> <br>
+            Fecha de emisión: <span id="c-fecha" class="data-line"></span> <br>
+            Lugar: <span class="data-line">San Miguel de Tucumán, Argentina</span>
+        </div>
+
+        <div class="cert-footer">
+            <div class="signature-space">Firma del Artista</div>
+            <div class="signature-space">Sello de Autenticidad</div>
+        </div>
+    </div>
+
+    <a href="#" class="wsp-float" onclick="enviarWsp('General')">WhatsApp / Inquiry</a>
+
+    <script>
+        function enviarWsp(obra) {
+            const numero = "543816726136"; 
+            const mensaje = encodeURIComponent(`Saludos. Me gustaría recibir información detallada sobre la obra "${obra}" de The Patrick Heir.`);
+            window.open(`https://wa.me/${numero}?text=${mensaje}`, '_blank');
+        }
+
+        function generarCertificado(titulo, tecnica, medidas) {
+            document.getElementById('c-titulo').innerText = titulo;
+            document.getElementById('c-tecnica').innerText = tecnica;
+            document.getElementById('c-medidas').innerText = medidas;
+            document.getElementById('c-fecha').innerText = new Date().toLocaleDateString();
+            window.print();
+        }
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.artwork').forEach(art => observer.observe(art));
+    </script>
+</body>
+</html>
